@@ -1,0 +1,31 @@
+services:
+  postgres-db-fastapi:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ./data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres-database
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "7777:80"
+    depends_on:
+      - postgres-db-fastapi
+    networks:
+      - postgres-database
+
+networks:
+  postgres-database:
+    driver: bridge
