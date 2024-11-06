@@ -1,5 +1,5 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Header, HTTPException
 from config import db
 from controller import router
 
@@ -13,9 +13,13 @@ async def lifespan(app: FastAPI):
 def init_app():
     app = FastAPI(lifespan=lifespan)
 
+    
     @app.get("/")
-    def home():
-        return "Welcome Home"
+    def index(real_ip: str = Header(None, alias='X-Real-IP')):
+        return {
+            "message": "Welcome Home",
+            "real_ip": real_ip
+        }
 
     app.include_router(router)
 
